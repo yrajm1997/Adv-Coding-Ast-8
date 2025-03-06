@@ -3,11 +3,12 @@ package com.mystore.app.service;
 import com.mystore.app.entity.Product;
 import com.mystore.app.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,23 +44,34 @@ public class ProductService {
     public Product addProduct(Product product) {
         product.setId(currentId++);
         productRepository.save(product);
-        //products.add(product);
         return product;
     }
 
-    public List<Product> getAllProducts() {
-        //return products;
+    public List<Product> getAllProducts2() {
         return productRepository.findAll();
+    }
+
+    public Page<Product> getAllProducts(Integer page, Integer pageSize, String sortBy, String sortDir) {
+        Sort.Direction direction = Sort.DEFAULT_DIRECTION;
+
+        if (sortDir.equalsIgnoreCase("Asc")) {
+            direction = Sort.Direction.ASC;
+        }
+        if (sortDir.equalsIgnoreCase("Desc")) {
+            direction = Sort.Direction.DESC;
+        }
+
+        Sort sort = Sort.by(direction, sortBy);
+        PageRequest pageRequest = PageRequest.of(page, pageSize, sort);
+        return productRepository.findAll(pageRequest);
     }
 
     public Product getProduct(Integer id) {
         Optional<Product> productOptional = productRepository.findById(id);
         return productOptional.get();
-        //return findProductById(id);
     }
 
     public Product updateProduct(Integer id, Product product) {
-        //Product p = findProductById(id);
         Product p = productRepository.findById(id).get();
         if (p == null) return null;
         p.setName(product.getName());
@@ -71,25 +83,11 @@ public class ProductService {
     }
 
     public String deleteProduct(Integer id) {
-        //Product p = findProductById(id);
         Product p = productRepository.findById(id).get();
         if (p == null) return "Product Not Found";
-        //products.remove(p);
         productRepository.delete(p);
         return "Product Deleted Successfully";
     }
-
-    /*
-    private Product findProductById(Integer id) {
-        for (Product p: products) {
-            if (p.getId().intValue() == id.intValue()) {
-                return p;
-            }
-        }
-        return null;
-    }
-    */
-
 
     // TODO: Method to search products by name
     public List<Product> searchByProductName(String name) {
@@ -97,18 +95,11 @@ public class ProductService {
         return productsFound;
     }
 
-    /*
     // TODO: Method to filter products by category
     public List<Product> filterByProductCategory(String category) {
-        List<Product> productsFound = new ArrayList<>();
-        for (Product p: products) {
-            if (p.getCategory().equals(category)) {
-                productsFound.add(p);
-            }
-        }
+        List<Product> productsFound = productRepository.findByCategoryContainsIgnoreCase(category);
         return productsFound;
     }
-    */
 
     // TODO: Method to filter products by price range
     public List<Product> filterByProductPrice(Double minPrice, Double maxPrice) {
@@ -116,17 +107,9 @@ public class ProductService {
         return productsFound;
     }
 
-    /*
     // TODO: Method to filter products by stock quantity range
     public List<Product> filterByProductStockQuantity(Integer minStock, Integer maxStock) {
-        List<Product> productsFound = new ArrayList<>();
-        for (Product p: products) {
-            if (p.getStockQuantity() >= minStock && p.getStockQuantity() <= maxStock) {
-                productsFound.add(p);
-            }
-        }
+        List<Product> productsFound = productRepository.findByStockQuantityBetween(minStock, maxStock);
         return productsFound;
     }
-
-     */
 }

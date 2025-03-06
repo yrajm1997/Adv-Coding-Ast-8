@@ -9,5 +9,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     public List<Product> findByNameContainsIgnoreCase(String name);
 
+    public List<Product> findByCategoryContainsIgnoreCase(String name);
+
     public List<Product> findByPriceBetween(Double min, Double max);
+
+    public List<Product> findByStockQuantityBetween(Integer min, Integer max);
 }

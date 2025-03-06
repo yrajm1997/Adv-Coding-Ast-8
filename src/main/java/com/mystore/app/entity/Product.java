@@ -21,8 +21,8 @@ public class Product {
     private String category;
 
     @Positive
-    @Min(value = 10, message = "Please don't add any product with price lesser than 10")
-    @Max(value = 100000, message = "This platform doesn't allow high priced products. Prices must be <= 100000 ")
+    @Min(value = 100, message = "Please don't add any product with price lesser than 100")
+    @Max(value = 50000, message = "This platform doesn't allow high priced products. Prices must be <= 50000")
     private Double price;
 
     @Positive
@@ -81,4 +81,3 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 }
-
