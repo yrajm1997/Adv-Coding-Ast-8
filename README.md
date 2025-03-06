@@ -109,7 +109,9 @@ Starter code for below functionalities have already provided:
 
 3. **Pagination and Sorting**
 
-   Update the `GET /products` endpoint to enable pagination and sorting. For example `GET /products?page=0&pageSize=3&sortBy=price&sortDir=desc`
+   Update the `GET /products` endpoint to enable pagination and sorting.
+
+   For example `GET /products?page=0&pageSize=3&sortBy=price&sortDir=desc`
    
    Perform sorting based on the field name and direction provided.
 
